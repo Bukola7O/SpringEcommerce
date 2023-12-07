@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -38,6 +39,15 @@ public class ProductController {
                 .addObject("products", productList)
                 .addObject("cartItems", "Cart Items: "+session.getAttribute("cartItems"));
     }
+    @GetMapping("/admin/all")
+    public ModelAndView findAllAdminProducts(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        List<Product> productList = productService.findAllProducts.get();
+        return new ModelAndView("admin-dashboard")
+                .addObject("products", productList);
+                //.addObject("cartItems", "Cart Items: "+session.getAttribute("cartItems"));
+    }
+
 
     @GetMapping("/add-cart")
     public String addToCart(@RequestParam(name = "cart") Long id, HttpServletRequest request, Model model){
@@ -59,7 +69,15 @@ public class ProductController {
         return orderService.makePayment(session, model);
     }
 
-
+    @GetMapping("/add-product")
+    public String addNewProductToStore(
+            @RequestParam(name = "category") String category,
+            @RequestParam(name = "price") BigDecimal price,
+            @RequestParam(name = "productName") String productName,
+            @RequestParam(name = "quantity") Long quantity) {
+        productService.addNewProduct(category, price, productName, quantity);
+        return "redirect:/products/all";
+    }
 
 
 }

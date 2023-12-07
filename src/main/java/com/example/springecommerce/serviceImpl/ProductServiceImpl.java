@@ -70,4 +70,17 @@ public class ProductServiceImpl {
         session.setAttribute("order", order);
         model.addAttribute("order", order);
     }
+    public void addNewProduct(String category, BigDecimal price, String productName, Long quantity) {
+        // Create a new product with the provided details
+        Product newProduct = Product.builder()
+                .categories(category)
+                .price(price)
+                .productName(productName)
+                .quantity(quantity)
+                // You might set other properties here
+                .build();
+
+        // Save the new product to the repository or perform other necessary actions
+        productRepositories.save(newProduct);
+    }
 }
